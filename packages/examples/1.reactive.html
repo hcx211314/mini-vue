@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="../reactivity/dist/VueReactivity.global.js"></script>
+    <script>
+        let {readonly} = VueReactivity;
+        let state = readonly({ name: 'zhangsan' });
+        state.name = 'zhangsan1';
+        console.log(state)
+    </script>
+</body>
+</html>

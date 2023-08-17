@@ -1,21 +1,41 @@
 import { isObject } from '@vue/shared';
-import { ReactiveFlags, mutableHandlers } from './baseHandler';
-
-const reactiveMap = new WeakMap();
+import { reactiveHandlers, shallowReactiveHandlers, readonlyHandlers, shallowReadonlyHandlers } from './baseHandler';
 
 export function reactive(target) {
-  if(!isObject(target)) {
-    return;
-  }
-  if(target[ReactiveFlags.IS_REACTIVE]) {
-    return target;
+  return createReactiveObject(target, false, reactiveHandlers)
+}
+
+export function shallowReactive(target) {
+  return createReactiveObject(target, false, shallowReactiveHandlers)
+}
+
+export function readonly(target) {
+  return createReactiveObject(target, true, readonlyHandlers)
+}
+
+export function shallowReadonly(target) {
+  return createReactiveObject(target, true, shallowReadonlyHandlers)
+}
+
+//数据结构
+const reactiveMap = new WeakMap()
+const readonlyMap = new WeakMap()
+
+// 核心实现代理
+function createReactiveObject(target, isReadonly, baseHandlers) {
+  // 先判断是不是对象
+  if (!isObject(target)) {
+    return
   }
 
-  let exsitingProxy = reactiveMap.get(target);
-  if(exsitingProxy) {
-    return exsitingProxy;
+  // 如果已经代理过了，就不要再次代理了
+  const proxyMap = isReadonly ? readonlyMap : reactiveMap
+  const existProxy = proxyMap.get(target)
+  if (existProxy) {
+    return existProxy
   }
-  const proxy = new Proxy(target, mutableHandlers)
-  reactiveMap.set(target, proxy);
-  return proxy;
+  const proxy = new Proxy(target, baseHandlers)
+  // 进行缓存代理
+  proxyMap.set(target, proxy)
+  return proxy
 }
