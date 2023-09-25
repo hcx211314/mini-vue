@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script src="../reactivity/dist/VueReactivity.global.js"></script>
+    <script>
+        let { ref, effect, toRefs, reactive } = VueReactivity;
+
+        // 原理： 就是将对象的所有的属性的值变成ref
+        let state = reactive({ age: 10, name: 'zhangsan', })
+
+        let { age, name } = toRefs(state, 'age')
+
+        console.log(age, name)
+
+        effect(() => {
+            app.innerText = age.value
+        })
+
+        setTimeout(() => {
+            age.value++
+        }, 1000);
+
+    </script>
+</body>
+
+</html>
