@@ -1,7 +1,7 @@
-import { isObject, isArray, isIntegerKey, extend, hasOwn } from '@vue/shared';
+import { isObject, isArray, isIntegerKey, extend, hasOwn, hasChange } from '@vue/shared';
 import { readonly, reactive } from './index'
 import { track, trigger } from './effect'
-import { TrackOpType } from './operations'
+import { TrackOpType, TriggerOpType } from './operations'
 
 
 export const enum ReactiveFlags {
@@ -40,10 +40,12 @@ function createSetter(shallow = false) {
     const res = Reflect.set(target, key, value, receiver)
     if (!hasKey) {
       // 新增
-      trigger(target, 'add', key, value)
+      trigger(target, TriggerOpType.ADD, key, value)
     } else if (oldValue !== value) {
       // 修改
-      trigger(target, 'set', key, value)
+      if(hasChange(value, oldValue)) {
+       trigger(target, TriggerOpType.SET, key, value, oldValue)
+      }
     }
     return res
   }

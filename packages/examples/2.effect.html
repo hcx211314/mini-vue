@@ -11,19 +11,20 @@
     <script src="../reactivity/dist/VueReactivity.global.js"></script>
     <script>
         let {reactive, effect} = VueReactivity;
-        let obj = { name: 'zhangsan', age: 1}
+        let obj = { name: 'zhangsan', age: 1,list: [1,2,3]}
         const state = reactive(obj)
         effect(() => {
             console.log(123)
-            app.innerText = state.name
+            app.innerText = state.name + state.list[2]
         })
 
-        effect(() => {
-            state.age1
-        })
+        // effect(() => {
+        //     state.age1
+        // })
 
         setTimeout(() => {
             state.name = "lisi"
+            state.list.length = 1
         }, 1000)
         
     </script>

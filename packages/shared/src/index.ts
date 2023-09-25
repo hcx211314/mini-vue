@@ -24,3 +24,5 @@ export const isIntegerKey = (key: unknown) =>
   key !== 'NaN' &&
   key[0] !== '-' &&
   '' + parseInt((key as string), 10) === key
+
+  export const hasChange = (value, oldValue) => value !== oldValue

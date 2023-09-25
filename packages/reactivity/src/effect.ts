@@ -1,3 +1,6 @@
+import { isObject, isArray, isIntegerKey, extend, hasOwn, hasChange } from '@vue/shared';
+import { TrackOpType, TriggerOpType } from './operations'
+
 export function effect(fn, options: any = {}) {
   const effect = createReactEffect(fn, options)
   if (!options.lazy) {
@@ -55,10 +58,42 @@ export function track(target, type, key) {
   if (!dep.has(activeEffect)) {
     dep.add(activeEffect)
   }
-  console.log(targetMap)
 }
 
 
-export function trigger(target, type, key) {
+export function trigger(target, type, key?, newValue?, oldValue?) {
+  const depMap = targetMap.get(target)
+  if (!depMap) {
+    return // 没有effect
+  }
+  let effectSet = new Set() // 如果有多个同时修改一个值，并且相同，set可以做到去重
+  const add = (effectsToAdd) => {
+    if (effectsToAdd) {
+      effectsToAdd.forEach(effect => { effectSet.add(effect) })
+    }
+  }
+  // 处理数组
+  if (key === 'length' && isArray(target)) {
+    depMap.forEach((dep, key) => {
+      if (key === 'length' || key > newValue) {
+        add(dep)
+      }
+    })
+  } else {
+    // 可能是对象
+    if (key !== undefined) {
+      add(depMap.get(key))
+    }
+    // 数组通过索引修改
+    switch (type) {
+      case TriggerOpType.ADD:
+        if (isArray(target) && isIntegerKey(key)) {
+          add(depMap.get('length'))
+        }
+    }
+  }
 
+  effectSet.forEach((effect: any) => {
+    effect()
+  })
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="../reactivity/dist/VueReactivity.global.js"></script>
+    <script>
+        let {ref, effect} = VueReactivity;
+        let name = ref('zhangsan') // 返回一个实例对象，添加一个value，这个value就是我们的值
+        console.log(name)
+        effect(() => {
+            console.log(123)
+            app.innerText = name.value
+        })
+        setTimeout(() => {
+            name.value = "lisi"
+        }, 2000)
+        // 1. 就是将普通的数据类型 实现代理 原理 Object.defineProperty
+        // 2. 返回值是一个实例对象，这个实例对象上有一个value属性，这个value属性就是我们的值
+    </script>
+</body>
+</html>
