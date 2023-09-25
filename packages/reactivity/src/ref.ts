@@ -27,11 +27,28 @@ class RefImpl {
     set value(newValue) {
         if (hasChange(newValue, this.rawValue)) {
             this.rawValue = newValue
-            this._value =  newValue
+            this._value = newValue
             trigger(this, TriggerOpType.SET, 'value', newValue)
         }
     }
 }
 function createRef(rawValue, shallow = false) {
     return new RefImpl(rawValue, shallow)
+}
+
+class ObjectRefImpl {
+    public __v_isRef = true
+    constructor(public target, public key) {
+
+    }
+    get value() {
+        return this.target[this.key]
+    }
+    set value(newValue) {
+        this.target[this.key] = newValue
+    }
+}
+
+export function toRef(target, key) {
+    return new ObjectRefImpl(target, key)
 }
