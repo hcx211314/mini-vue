@@ -19,7 +19,7 @@ function createReactEffect(fn, options) {
         // 入栈
         effectStack.push(effect)
         activeEffect = effect
-        fn() // 执行用户传入的方法
+        return fn() // 执行用户传入的方法
       } finally {
         effectStack.pop()
         activeEffect = effectStack.at(-1)
@@ -94,6 +94,10 @@ export function trigger(target, type, key?, newValue?, oldValue?) {
   }
 
   effectSet.forEach((effect: any) => {
-    effect()
+    if(effect.options.scheduler) {
+      effect.options.scheduler(effect)
+    }else {
+      effect()
+    }
   })
 }
