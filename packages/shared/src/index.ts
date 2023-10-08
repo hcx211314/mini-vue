@@ -26,3 +26,5 @@ export const isIntegerKey = (key: unknown) =>
   '' + parseInt((key as string), 10) === key
 
   export const hasChange = (value, oldValue) => value !== oldValue
+
+  export * from './shapeFlags'

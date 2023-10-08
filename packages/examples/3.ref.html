@@ -7,17 +7,20 @@
 </head>
 <body>
     <div id="app"></div>
-    <script src="../reactivity/dist/VueReactivity.global.js"></script>
+    <!-- <script src="../reactivity/dist/VueReactivity.global.js"></script> -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
     <script>
-        let {ref, effect} = VueReactivity;
-        let name = ref('zhangsan') // 返回一个实例对象，添加一个value，这个value就是我们的值
+        let {ref, effect} = Vue;
+        let name = ref({a:1}) // 返回一个实例对象，添加一个value，这个value就是我们的值
         console.log(name)
         effect(() => {
             console.log(123)
-            app.innerText = name.value
+            app.innerText = name.value.a
         })
         setTimeout(() => {
-            name.value = "lisi"
+            console.log(1)
+            name.value.a = "lisi"
         }, 2000)
         // 1. 就是将普通的数据类型 实现代理 原理 Object.defineProperty
         // 2. 返回值是一个实例对象，这个实例对象上有一个value属性，这个value属性就是我们的值

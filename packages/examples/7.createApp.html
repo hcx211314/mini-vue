@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
+    <div id="app">
+        123
+    </div>
     <script src="../runtime-dom/dist/VueRuntimeDom.global.js"></script>
     <script>
-        console.log(VueRuntimeDom)
+        let { createApp } = VueRuntimeDom;
+        let App = {
+            render() {
+                console.log(100)
+            }
+        }
+        setTimeout(() => {
+            createApp(App, { name: 'zhangsan', age: 10 }).mount("#app")
+        }, 1000)
     </script>
 </body>
+
 </html>
