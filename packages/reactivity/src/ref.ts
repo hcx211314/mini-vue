@@ -1,6 +1,7 @@
 import { hasChange, isArray } from '@vue/shared';
 import { track, trigger } from './effect'
 import { TrackOpType, TriggerOpType } from './operations'
+import { reactive } from './reactive';
 
 export function ref(value) {
     return createRef(value)
@@ -15,7 +16,7 @@ class RefImpl {
     public __v_isRef = true
     public _value
     constructor(public rawValue, public _shallow) {
-        this._value = rawValue
+        this._value = reactive(rawValue)
     }
 
     // 类的属性访问器
@@ -25,10 +26,13 @@ class RefImpl {
     }
 
     set value(newValue) {
+        console.log('set value12', newValue)
+        debugger
+        console.log(newValue)
         if (hasChange(newValue, this.rawValue)) {
-            this.rawValue = newValue
-            this._value = newValue
-            trigger(this, TriggerOpType.SET, 'value', newValue)
+            this.rawValue = reactive(newValue)
+            this._value = reactive(newValue)
+            trigger(this, TriggerOpType.SET, 'value', reactive(newValue))
         }
     }
 }
